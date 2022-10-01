@@ -1,0 +1,78 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: >
+  cloud-shopping-list-stack
+
+  Sample SAM Template for cloud-shopping-list-stack
+
+Globals:
+  Function:
+    Timeout: 3
+
+Resources:
+  ItemDatabase:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: cloud-shopping-list
+      ProvisionedThroughput:
+        ReadCapacityUnits: 1
+        WriteCapacityUnits: 1
+      AttributeDefinitions:
+        - AttributeName: name
+          AttributeType: S
+      KeySchema:
+        - AttributeName: name
+          KeyType: HASH
+
+  GetItemFunction:
+    Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
+    Properties:
+      Policies:
+      # Give the Lambda service access to poll your DynamoDB Stream
+      - AmazonDynamoDBFullAccess
+      CodeUri: lambdas/item-get
+      Handler: item_get.lambda_handler
+      Runtime: ruby2.7
+      Architectures:
+        - x86_64
+      Events:
+        GetItems:
+          Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
+          Properties:
+            Path: /items/{name}
+            Method: get
+  CreateItemFunction:
+      Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
+      Properties:
+        Policies:
+      # Give the Lambda service access to poll your DynamoDB Stream
+          - AmazonDynamoDBFullAccess
+        CodeUri: lambdas/item-create
+        Handler: item_create.lambda_handler
+        Runtime: ruby2.7
+        Architectures:
+          - x86_64
+        Events:
+          GetItems:
+            Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
+            Properties:
+              Path: /items
+              Method: post
+  ScanItemFunction:
+    Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
+    Properties:
+      Policies:
+    # Give the Lambda service access to poll your DynamoDB Stream
+        - AmazonDynamoDBFullAccess
+      CodeUri: lambdas/item-scan
+      Handler: item_scan.lambda_handler
+      Runtime: ruby2.7
+      Architectures:
+        - x86_64
+      Events:
+        GetItems:
+          Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
+          Properties:
+            Path: /items
+            Method: get
+

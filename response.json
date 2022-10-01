@@ -1,0 +1,47 @@
+{
+  "message": {
+    "resource": "/items/{name}",
+    "path": "/items/alma",
+    "httpMethod": "GET",
+    "headers": null,
+    "multiValueHeaders": null,
+    "queryStringParameters": null,
+    "multiValueQueryStringParameters": null,
+    "pathParameters": { "name": "alma" },
+    "stageVariables": null,
+    "requestContext": {
+      "resourceId": "3dusah",
+      "resourcePath": "/items/{name}",
+      "httpMethod": "GET",
+      "extendedRequestId": "ZU91cGYJoAMFteQ=",
+      "requestTime": "01/Oct/2022:13:40:37 +0000",
+      "path": "/items/{name}",
+      "accountId": "596618193278",
+      "protocol": "HTTP/1.1",
+      "stage": "test-invoke-stage",
+      "domainPrefix": "testPrefix",
+      "requestTimeEpoch": 1664631637877,
+      "requestId": "f4f8a9b7-26ba-4124-999c-6804d1052331",
+      "identity": {
+        "cognitoIdentityPoolId": null,
+        "cognitoIdentityId": null,
+        "apiKey": "test-invoke-api-key",
+        "principalOrgId": null,
+        "cognitoAuthenticationType": null,
+        "userArn": "arn:aws:iam::596618193278:root",
+        "apiKeyId": "test-invoke-api-key-id",
+        "userAgent": "aws-internal/3 aws-sdk-java/1.12.302 Linux/5.4.207-126.363.amzn2int.x86_64 OpenJDK_64-Bit_Server_VM/25.342-b07 java/1.8.0_342 vendor/Oracle_Corporation cfg/retry-mode/standard",
+        "accountId": "596618193278",
+        "caller": "596618193278",
+        "sourceIp": "test-invoke-source-ip",
+        "accessKey": "ASIAYV2JXFF7GZ7IY4HY",
+        "cognitoAuthenticationProvider": null,
+        "user": "596618193278"
+      },
+      "domainName": "testPrefix.testDomainName",
+      "apiId": "9uppomymx9"
+    },
+    "body": null,
+    "isBase64Encoded": false
+  }
+}

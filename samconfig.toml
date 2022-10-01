@@ -1,0 +1,10 @@
+version = 0.1
+[default]
+[default.deploy]
+[default.deploy.parameters]
+stack_name = "cloud-shopping-list"
+s3_bucket = "aws-sam-cli-managed-default-samclisourcebucket-1krhpt9iwa8v3"
+s3_prefix = "cloud-shopping-list"
+region = "us-east-1"
+capabilities = "CAPABILITY_IAM"
+image_repositories = []

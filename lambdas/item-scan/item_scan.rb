@@ -1,4 +1,5 @@
 require 'aws-sdk-dynamodb'
+require 'json'
 
 def lambda_handler(event:, context:)
   dynamodb_client = Aws::DynamoDB::Client.new
@@ -8,8 +9,11 @@ def lambda_handler(event:, context:)
   result = dynamodb_client.scan(table_item)
   {
     statusCode: 200,
-    body: {
-      message: result,
-    }.to_json
+    body: result.to_json,
+    headers: {
+            "Access-Control-Allow-Headers" => "Content-Type",
+            "Access-Control-Allow-Origin"=> "*",
+            "Access-Control-Allow-Methods"=> "OPTIONS,POST,GET"
+        },
   }
 end

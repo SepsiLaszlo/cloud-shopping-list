@@ -10,6 +10,26 @@ Globals:
     Timeout: 3
 
 Resources:
+  CloudSoppingListApi:
+    Type: 'AWS::ApiGatewayV2::Api'
+    Properties:
+      Name: CloudSoppingListApi
+      ProtocolType: HTTP
+      CorsConfiguration:
+        AllowHeaders: 
+          - '*'
+        AllowMethods: 
+          - '*'
+        AllowOrigins: 
+          - '*'
+
+MyStage:
+  Type: 'AWS::ApiGatewayV2::Stage'
+  Properties:
+    StageName: dev
+    Description: dev stage
+    ApiId: !Ref CloudSoppingListApi
+
   ItemDatabase:
     Type: AWS::DynamoDB::Table
     Properties:
@@ -40,15 +60,15 @@ Resources:
           Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
           Properties:
             Path: /items/{name}
-            Method: get
-  CreateItemFunction:
+            Method: get 
+  PutItemFunction:
       Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
       Properties:
         Policies:
       # Give the Lambda service access to poll your DynamoDB Stream
           - AmazonDynamoDBFullAccess
-        CodeUri: lambdas/item-create
-        Handler: item_create.lambda_handler
+        CodeUri: lambdas/item-put
+        Handler: item_put.lambda_handler
         Runtime: ruby2.7
         Architectures:
           - x86_64
@@ -75,4 +95,60 @@ Resources:
           Properties:
             Path: /items
             Method: get
-
+  ScanItemRoute:
+    Type: AWS::ApiGatewayV2::Route
+    Properties:
+      ApiId: !Ref CloudSoppingListApi
+      RouteKey: 'GET /items'
+      Target: !Join
+        - /
+        - - integrations
+          - !Ref ScanItemIntegration
+  ScanItemIntegration:
+    Type: 'AWS::ApiGatewayV2::Integration'
+    Properties:
+      ApiId: !Ref CloudSoppingListApi
+      Description: Lambda Integration
+      IntegrationType: AWS_PROXY
+      IntegrationUri: !GetAtt ScanItemFunction.Arn
+      IntegrationMethod: GET
+      PayloadFormatVersion: '2.0'
+      CredentialsArn: !GetAtt ApiLambdaExecuteRole.Arn
+  ApiLambdaExecuteRole:
+    Type: 'AWS::IAM::Role'
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service:
+                - apigateway.amazonaws.com
+            Action:
+              - 'sts:AssumeRole'
+      Path: /
+      Policies:
+        - PolicyName: root
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              - Effect: Allow
+                Action: '*'
+                Resource: 'arn:aws:lambda:*'        
+  PutItemFunction:
+      Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
+      Properties:
+        Policies:
+      # Give the Lambda service access to poll your DynamoDB Stream
+          - AmazonDynamoDBFullAccess
+        CodeUri: lambdas/item-put
+        Handler: item_put.lambda_handler
+        Runtime: ruby2.7
+        Architectures:
+          - x86_64
+        Events:
+          GetItems:
+            Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
+            Properties:
+              Path: /items
+              Method: post

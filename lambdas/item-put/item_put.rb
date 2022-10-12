@@ -1,7 +1,8 @@
 require 'aws-sdk-dynamodb'
 require 'json'
 def lambda_handler(event:, context:)
-  data = JSON.parse(event["body"])
+ 
+  data = event["body"]
   dynamodb_client = Aws::DynamoDB::Client.new
   table_item = {
     table_name: 'cloud-shopping-list',

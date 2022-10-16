@@ -5,19 +5,18 @@ require "./put_api_method.rb"
 p 'API CREATION START'
 
 apis = API_CLIENT.get_rest_apis
-api = apis.items.find do |api|
-  api.name == API_NAME
+
+apis.items.find do |api|
+  API_CLIENT.delete_rest_api(rest_api_id: api.id) if api.name == API_NAME
 end
 
-if api.nil?
-    api = API_CLIENT.create_rest_api(
-      name: API_NAME,
-      description: "Ruby version",
-      minimum_compression_size: 123,
-      endpoint_configuration: {
-        types: ["REGIONAL"],
-      })
-end
+api = API_CLIENT.create_rest_api(
+  name: API_NAME,
+  description: "Ruby version",
+  minimum_compression_size: 123,
+  endpoint_configuration: {
+    types: ["REGIONAL"],
+  })
 
 resources = API_CLIENT.get_resources(rest_api_id: api.id).items
 
@@ -34,7 +33,7 @@ item_resource = API_CLIENT.create_resource({
  put_api_method(http_method:'GET',
  api: api, resource: item_resource,
  function_arn: items_scan_lambda.function_arn)
-  items_put_lambda =  put_lambda(name:'item_put')
+ items_put_lambda =  put_lambda(name:'item_put')
  put_api_method(http_method:'POST',
  api: api, resource: item_resource,
  function_arn: items_scan_lambda.function_arn)

@@ -21,7 +21,7 @@ integration = API_CLIENT.put_integration(
   rest_api_id: api.id,
   resource_id: resource.id,
   http_method: http_method,
-  integration_http_method: http_method,
+  integration_http_method: "POST",
   type: 'AWS',
   uri: "arn:aws:apigateway:#{REGION}:lambda:path/2015-03-31/functions/#{function_arn}/invocations",
   credentials: 'arn:aws:iam::596618193278:role/ApiGateWayLambdaInvokeRole',

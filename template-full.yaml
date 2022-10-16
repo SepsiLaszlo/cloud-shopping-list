@@ -1,0 +1,178 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: >
+  cloud-shopping-list-stack
+
+  Sample SAM Template for cloud-shopping-list-stack
+
+Globals:
+  Function:
+    Timeout: 3
+Resources:
+  ApiGatewayRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Effect: Allow
+            Action: sts:AssumeRole
+            Principal:
+              Service:
+                - apigateway.amazonaws.com
+      Policies:
+        - PolicyName: !Sub "CloudShoppingListInvokeFunctionPolicy"
+          PolicyDocument:
+            Version: 2012-10-17
+            Statement:
+              - Effect: Allow
+                Action:
+                  - lambda:InvokeFunction
+                Resource:
+                  - !GetAtt GetAllItemFunction.Arn
+                  - !GetAtt PutItemFunction.Arn
+  ItemDatabase:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: cloud-shopping-list
+      ProvisionedThroughput:
+        ReadCapacityUnits: 1
+        WriteCapacityUnits: 1
+      AttributeDefinitions:
+        - AttributeName: name
+          AttributeType: S
+      KeySchema:
+        - AttributeName: name
+          KeyType: HASH
+  CloudShoppingListApi:
+    Type: 'AWS::ApiGateway::RestApi'
+    Properties:
+      Description: A test API
+      Name: cloud-shopping-list-api
+      MinimumCompressionSize: 123
+      EndpointConfiguration:
+        Types:
+          - REGIONAL
+  ItemsResource:
+    Type: 'AWS::ApiGateway::Resource'
+    Properties:
+      RestApiId: !Ref CloudShoppingListApi
+      ParentId: !GetAtt CloudShoppingListApi.RootResourceId
+      PathPart: items
+  GetAllItemFunction:
+    Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
+    Properties:
+      Policies:
+    # Give the Lambda service access to poll your DynamoDB Stream
+        - AmazonDynamoDBFullAccess
+      CodeUri: lambdas/item-scan
+      Handler: item_scan.lambda_handler
+      Runtime: ruby2.7
+      Architectures:
+        - x86_64
+      Events:
+        GetItems:
+          Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
+          Properties:
+            Path: /items
+            Method: get    
+  ItemMethod:
+    Type: AWS::ApiGateway::Method
+    Properties:
+      AuthorizationType: NONE
+      HttpMethod: GET
+      Integration:
+        ConnectionType: INTERNET
+        Credentials: !GetAtt ApiGatewayRole.Arn
+        IntegrationHttpMethod: POST
+        Type: AWS_PROXY
+        Uri: !Sub
+          - 'arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${FunctionArn}/invocations'
+          - FunctionArn: !GetAtt GetAllItemFunction.Arn
+        IntegrationResponses:
+          - ResponseParameters:
+             'method.response.header.Access-Control-Allow-Headers': "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'"
+             'method.response.header.Access-Control-Allow-Methods': "'GET'"
+             'method.response.header.Access-Control-Allow-Origin': "'*'"
+            # ResponseTemplates: 
+            StatusCode: "200"
+            # RequestTemplates:
+            #  application/json: '{ statusCode: 200 }'
+      ResourceId: !Ref ItemsResource
+      RestApiId: !Ref CloudShoppingListApi
+      MethodResponses:
+        - ResponseModels: 
+            'application/json': 'Empty'
+          ResponseParameters: 
+            'method.response.header.Access-Control-Allow-Headers': true
+            'method.response.header.Access-Control-Allow-Origin': true
+            'method.response.header.Access-Control-Allow-Methods': true
+          StatusCode: 200
+
+
+  PutItemFunction:
+      Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
+      Properties:
+        Policies:
+      # Give the Lambda service access to poll your DynamoDB Stream
+          - AmazonDynamoDBFullAccess
+        CodeUri: lambdas/item-put
+        Handler: item_put.lambda_handler
+        Runtime: ruby2.7
+        Architectures:
+          - x86_64
+        Events:
+          PutItems:
+            Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
+            Properties:
+              Path: /items
+              Method: post
+  PutItemMethod:
+    Type: AWS::ApiGateway::Method
+    Properties:
+      AuthorizationType: NONE
+      HttpMethod: POST
+      Integration:
+        ConnectionType: INTERNET
+        Credentials: !GetAtt ApiGatewayRole.Arn
+        IntegrationHttpMethod: POST
+        Type: AWS_PROXY
+        Uri: !Sub
+          - 'arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${FunctionArn}/invocations'
+          - FunctionArn: !GetAtt PutItemFunction.Arn
+        IntegrationResponses:
+          - ResponseParameters:
+             'method.response.header.Access-Control-Allow-Headers': "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'"
+             'method.response.header.Access-Control-Allow-Methods': "'GET'"
+             'method.response.header.Access-Control-Allow-Origin': "'*'"
+            # ResponseTemplates: 
+            StatusCode: "200"
+      ResourceId: !Ref ItemsResource
+      RestApiId: !Ref CloudShoppingListApi
+      MethodResponses:
+        - ResponseModels: 
+            'application/json': 'Empty'
+          ResponseParameters: 
+            'method.response.header.Access-Control-Allow-Headers': True
+            'method.response.header.Access-Control-Allow-Origin': True
+            'method.response.header.Access-Control-Allow-Methods': True
+          StatusCode: 200
+  # GetItemFunction:
+  #   Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
+  #   Properties:
+  #     Policies:
+  #     # Give the Lambda service access to poll your DynamoDB Stream
+  #     - AmazonDynamoDBFullAccess
+  #     CodeUri: lambdas/item-get
+  #     Handler: item_get.lambda_handler
+  #     Runtime: ruby2.7
+  #     Architectures:
+  #       - x86_64
+  #     Events:
+  #       GetItems:
+  #         Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
+  #         Properties:
+  #           Path: /items/{name}
+  #           Method: get
+  #           RestApiId: !Ref CloudShoppingListApi
+

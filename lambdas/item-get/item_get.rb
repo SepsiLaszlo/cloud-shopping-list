@@ -16,5 +16,5 @@ def lambda_handler(event:, context:)
     body: {
       message: result,
     }.to_json
-  }
+    }
 end

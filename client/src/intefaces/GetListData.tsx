@@ -1,5 +1,5 @@
 export interface GetListData {
-  items: GetLisElement[];
+  body: GetLisElement[];
   count: number;
   scanned: number;
 }

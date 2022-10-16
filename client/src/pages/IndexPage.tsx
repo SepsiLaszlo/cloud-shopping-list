@@ -31,9 +31,10 @@ export const IndexPage: React.FC = (props) => {
         },
       })
       .then((response) => {
-        console.log(response.data.items);
+        console.log(response.data.body);
+        // const data = JSON.parse(response.data)
         setItems(
-          response.data.items.map((getListElemnet) => ({
+          response.data.body.map((getListElemnet) => ({
             element: getListElemnet,
             editable: false,
           }))

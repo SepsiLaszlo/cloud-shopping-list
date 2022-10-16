@@ -12,7 +12,12 @@ def lambda_handler(event:, context:)
   {
     statusCode: 201,
     body: {
-      message: result
+      message: result,
+      headers: {
+        "Access-Control-Allow-Headers" => "*",
+        "Access-Control-Allow-Origin"=> "*",
+        "Access-Control-Allow-Methods"=> "OPTIONS,POST,GET,PUT,PATCH"
+    },
     }.to_json
   }
 end

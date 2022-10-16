@@ -7,13 +7,9 @@ def lambda_handler(event:, context:)
     table_name: 'cloud-shopping-list'
 }
   result = dynamodb_client.scan(table_item)
+
   {
     statusCode: 200,
-    body: result.to_json,
-    headers: {
-            "Access-Control-Allow-Headers" => "Content-Type",
-            "Access-Control-Allow-Origin"=> "*",
-            "Access-Control-Allow-Methods"=> "OPTIONS,POST,GET"
-        },
+    body: result["items"],
   }
 end

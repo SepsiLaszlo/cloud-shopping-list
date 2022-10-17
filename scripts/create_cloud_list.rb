@@ -30,13 +30,16 @@ item_resource = API_CLIENT.create_resource({
 
 
  items_scan_lambda =  put_lambda(name:'item_scan')
+ 
  put_api_method(http_method:'GET',
  api: api, resource: item_resource,
  function_arn: items_scan_lambda.function_arn)
+ 
  items_put_lambda =  put_lambda(name:'item_put')
+ 
  put_api_method(http_method:'POST',
  api: api, resource: item_resource,
- function_arn: items_scan_lambda.function_arn)
+ function_arn: items_put_lambda.function_arn)
 p "api #{api.id}"
 # p items_scan_lambda
 p 'API CREATION - DONE'

@@ -56,7 +56,7 @@ def put_lambda(name:)
         s3_key: "#{name}.zip"
     })
     end
-    put_permission(function_name: function_name)
+    # put_permission(function_name: function_name)
     p "LAMBDA PUT - DONE - #{name}"
     lambda_function
 end

@@ -1,4 +1,5 @@
 require 'aws-sdk-dynamodb'
+require 'json'
 
 def lambda_handler(event:, context:)
   params = event['pathParameters']
@@ -13,8 +14,6 @@ def lambda_handler(event:, context:)
   result = dynamodb_client.get_item(table_item)
   {
     statusCode: 200,
-    body: {
-      message: result,
-    }.to_json
-    }
+    body: JSON.generate(result)
+  }
 end

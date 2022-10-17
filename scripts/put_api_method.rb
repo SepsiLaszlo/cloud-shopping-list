@@ -25,6 +25,9 @@ integration = API_CLIENT.put_integration(
   type: 'AWS',
   uri: "arn:aws:apigateway:#{REGION}:lambda:path/2015-03-31/functions/#{function_arn}/invocations",
   credentials: 'arn:aws:iam::596618193278:role/ApiGateWayLambdaInvokeRole',
+  request_templates: {
+    'application/json': File.read('/home/ec2-user/environment/cloud-shopping-list/scripts/method_request_passtrought.txt')
+  }
 )
 integration_response = API_CLIENT.put_integration_response(
   rest_api_id: api.id,

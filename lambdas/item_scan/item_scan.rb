@@ -10,6 +10,6 @@ def lambda_handler(event:, context:)
 
   {
     statusCode: 200,
-    body: result["items"],
+    body: JSON.generate(result["items"]),
   }
 end

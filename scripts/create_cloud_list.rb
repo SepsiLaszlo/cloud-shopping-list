@@ -27,6 +27,11 @@ item_resource = API_CLIENT.create_resource({
                                          parent_id: root_id,
                                          path_part: "items",
                                        })
+item_id_resource = API_CLIENT.create_resource({
+                                        rest_api_id: api.id,
+                                         parent_id: item_resource.id,
+                                         path_part: "{:name}",
+                                       })                                       
 
 
  items_scan_lambda =  put_lambda(name:'item_scan')
@@ -40,6 +45,13 @@ item_resource = API_CLIENT.create_resource({
  put_api_method(http_method:'POST',
  api: api, resource: item_resource,
  function_arn: items_put_lambda.function_arn)
+ 
+ items_delete_lambda =  put_lambda(name:'item_delete')
+ items_delete_lambda
+ put_api_method(http_method:'DELETE',
+ api: api, resource: item_id_resource,
+ function_arn: items_delete_lambda.function_arn)
+ 
 p "api #{api.id}"
 # p items_scan_lambda
 p 'API CREATION - DONE'

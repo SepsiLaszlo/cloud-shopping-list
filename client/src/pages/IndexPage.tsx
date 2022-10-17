@@ -7,6 +7,7 @@ import {
   Button,
   Input,
   ListItem,
+  Editable,
 } from "@chakra-ui/react";
 import * as React from "react";
 import axios from "axios";
@@ -55,6 +56,13 @@ export const IndexPage: React.FC = (props) => {
         },
       })
       .then((response) => {
+        let newItems = items.filter(item => item.element.name!==name)
+        let newItem:EditableListElement = {editable:false, element:
+          {name: name,
+          price: price}  
+        }
+        newItems.push(newItem)
+        setItems(newItems)
       });
   }
 
@@ -66,7 +74,8 @@ export const IndexPage: React.FC = (props) => {
         },
       })
       .then((response) => {
-        
+        let newItems = items.filter(item => item.element.name!==name)
+        setItems(newItems)
       });
   }
 

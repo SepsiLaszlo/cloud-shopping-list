@@ -22,15 +22,6 @@ Resources:
       KeySchema:
         - AttributeName: name
           KeyType: HASH
-  CloudShoppingListApi:
-    Type: AWS::Serverless::Api
-    Properties:
-      StageName: Prod
-      Name: CloudShoppingListApi
-      Cors:
-        AllowMethods: "'DELETE,GET,HEAD,OPTIONS,PATCH,POST,PUT'"
-        AllowHeaders: "'Content-Type,X-Amz-Date,X-Amz-Security-Token,Authorization,X-Api-Key,X-Requested-With,Accept,Access-Control-Allow-Methods,Access-Control-Allow-Origin,Access-Control-Allow-Headers'"
-        AllowOrigin: "'*'"
      
   GetItemFunction:
     Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
@@ -49,7 +40,6 @@ Resources:
           Properties:
             Path: /items/{name}
             Method: get
-            RestApiId: !Ref CloudShoppingListApi
   PutItemFunction:
       Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
       Properties:
@@ -67,7 +57,6 @@ Resources:
             Properties:
               Path: /items
               Method: post
-              RestApiId: !Ref CloudShoppingListApi
   ScanItemFunction:
     Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
     Properties:
@@ -85,5 +74,21 @@ Resources:
           Properties:
             Path: /items
             Method: get    
-            RestApiId: !Ref CloudShoppingListApi
+  DeleteItemFunction:
+    Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
+    Properties:
+      Policies:
+    # Give the Lambda service access to poll your DynamoDB Stream
+        - AmazonDynamoDBFullAccess
+      CodeUri: lambdas/item-delete
+      Handler: item_delete.lambda_handler
+      Runtime: ruby2.7
+      Architectures:
+        - x86_64
+      Events:
+        GetItems:
+          Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
+          Properties:
+            Path: /items
+            Method: delete    
   

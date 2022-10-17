@@ -32,9 +32,10 @@ export const IndexPage: React.FC = (props) => {
       })
       .then((response) => {
         console.log(response.data.body);
+        let data:[GetLisElement] = JSON.parse(response.data.body)
         // const data = JSON.parse(response.data)
         setItems(
-          response.data.body.map((getListElemnet) => ({
+          data.map((getListElemnet) => ({
             element: getListElemnet,
             editable: false,
           }))
@@ -54,7 +55,18 @@ export const IndexPage: React.FC = (props) => {
         },
       })
       .then((response) => {
-        console.log(response);
+      });
+  }
+
+  function deleteItem(name: string) {
+    axios
+      .delete<ItemPostResponse>(`${BASE_URL}/items/${name}`, {
+        headers: {
+          Accept: "application/json",
+        },
+      })
+      .then((response) => {
+        
       });
   }
 
@@ -102,6 +114,7 @@ export const IndexPage: React.FC = (props) => {
             item={item}
             updateItems={updateItems}
             toggleItems={toggleItems}
+            deleteItem={deleteItem}
           ></Item>
         ))}
       </VStack>

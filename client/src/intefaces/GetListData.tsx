@@ -1,7 +1,6 @@
 export interface GetListData {
-  body: GetLisElement[];
-  count: number;
-  scanned: number;
+  body: string;
+  
 }
 
 export interface GetLisElement {

@@ -7,7 +7,8 @@ export const Item: React.FC<{
   item: EditableListElement;
   updateItems: (name: string, newPrice: number) => void;
   toggleItems: (name: string) => void;
-}> = ({ item, updateItems, toggleItems }) => {
+  deleteItem: (name: string) => void;
+}> = ({ item, updateItems, toggleItems, deleteItem }) => {
   const [input, setInput] = useState("");
 
   function changeHandler(e: any) {
@@ -21,6 +22,10 @@ export const Item: React.FC<{
 
   function toggle() {
     toggleItems(item.element.name);
+  }
+
+  function remove(){
+    deleteItem(item.element.name)
   }
   return (
     <>
@@ -53,7 +58,7 @@ export const Item: React.FC<{
           {item.editable ? (
             <Button onClick={toggle}>Mégsem</Button>
           ) : (
-            <Button>Töröl</Button>
+            <Button onClick={remove}>Töröl</Button>
           )}
         </Box>
       </Flex>

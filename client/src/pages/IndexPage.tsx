@@ -20,6 +20,7 @@ import {
 } from "../intefaces/GetListData";
 import { Item } from "../components/item";
 import { BASE_URL } from "../constants";
+import { NewItem } from "../components/newItem";
 export const IndexPage: React.FC = (props) => {
   useEffect(() => {
     if (items.length != 0) {
@@ -111,13 +112,21 @@ export const IndexPage: React.FC = (props) => {
     );
   }
 
+  function createItem(name:string, price:number){
+    postItem(name,price)
+    // let newItem:EditableListElement = {editable:false, element: {name: name, price: price}}
+    // let newItems = [...items,newItem]
+    // setItems(newItems)
+  }
   return (
     <>
       <VStack
         divider={<StackDivider borderColor="gray.200" />}
         spacing={4}
         align="stretch"
+        px={5}
       >
+        <NewItem newItem={createItem}></NewItem>
         {items.map((item) => (
           <Item
             item={item}

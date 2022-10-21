@@ -1,14 +1,15 @@
 import { Box, Button, Flex, Input, Text, VStack } from "@chakra-ui/react";
 import * as React from "react";
 import { useState } from "react";
-import { EditableListElement } from "../intefaces/GetListData";
+import { Item } from "../intefaces/GetListData";
 
-export const Item: React.FC<{
-  item: EditableListElement;
+export const ItemComponent: React.FC<{
+  item: Item;
+  editable: boolean;
   updateItems: (name: string, newPrice: number) => void;
   toggleItems: (name: string) => void;
   deleteItem: (name: string) => void;
-}> = ({ item, updateItems, toggleItems, deleteItem }) => {
+}> = ({ item, editable, updateItems, toggleItems, deleteItem }) => {
   const [input, setInput] = useState("");
 
   function changeHandler(e: any) {
@@ -16,36 +17,37 @@ export const Item: React.FC<{
   }
 
   function save() {
-    updateItems(item.element.name, Number(input));
+    updateItems(item.name, Number(input));
     toggle();
   }
 
   function toggle() {
-    toggleItems(item.element.name);
+    toggleItems(item.name);
   }
 
   function remove(){
-    deleteItem(item.element.name)
+    deleteItem(item.name)
   }
   return (
     <>
       <Flex justifyContent="space-between" alignItems="center">
+        {editable && (<>Editing</>)}
         <VStack flex={1} alignItems="start">
-          {item.editable ? (
+          {editable ? (
             <>
-              <Text>{item.element.name}</Text>
+              <Text>{item.name}</Text>
               <Input onChange={changeHandler}></Input>
             </>
           ) : (
             <>
-              <Text>{item.element.name}</Text>
-              <Text>{Number(item.element.price)} Ft</Text>
+              <Text>{item.name}</Text>
+              <Text>{Number(item.price)} Ft</Text>
             </>
           )}
         </VStack>
 
         <Box minW={200}>
-          {item.editable ? (
+          {editable ? (
             <Button mx={3} onClick={save}>
               Ment
             </Button>
@@ -55,7 +57,7 @@ export const Item: React.FC<{
             </Button>
           )}
 
-          {item.editable ? (
+          {editable ? (
             <Button onClick={toggle}>Mégsem</Button>
           ) : (
             <Button onClick={remove}>Töröl</Button>

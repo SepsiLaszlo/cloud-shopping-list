@@ -12,59 +12,48 @@ import {
 import * as React from "react";
 import axios from "axios";
 import { useEffect } from "react";
-import {
-  EditableListElement,
-  GetLisElement,
-  GetListData,
-  ItemPostResponse,
-} from "../intefaces/GetListData";
-import { Item } from "../components/item";
+import { Item, ItemPostResponse } from "../intefaces/GetListData";
+import { ItemComponent } from "../components/item";
 import { BASE_URL } from "../constants";
 import { NewItem } from "../components/newItem";
 export const IndexPage: React.FC = (props) => {
+  const [items, setItems] = React.useState<Item[]>([]);
+
   useEffect(() => {
     if (items.length != 0) {
       return;
     }
     axios
-      .get<GetListData>(`${BASE_URL}/items`, {
+      .get<Item[]>(`${BASE_URL}/items`, {
         headers: {
           Accept: "application/json",
         },
       })
       .then((response) => {
-        console.log(response.data.body);
-        let data:[GetLisElement] = JSON.parse(response.data.body)
-        // const data = JSON.parse(response.data)
-        setItems(
-          data.map((getListElemnet) => ({
-            element: getListElemnet,
-            editable: false,
-          }))
-        );
+        setItems(response.data);
       });
   });
 
   function postItem(name: string, price: number) {
-    axios
-      .post<ItemPostResponse>(`${BASE_URL}/items`, {
-        headers: {
-          Accept: "application/json",
-        },
-        body: {
-          name: name,
-          price: price,
-        },
-      })
-      .then((response) => {
-        let newItems = items.filter(item => item.element.name!==name)
-        let newItem:EditableListElement = {editable:false, element:
-          {name: name,
-          price: price}  
-        }
-        newItems.push(newItem)
-        setItems(newItems)
-      });
+    // axios
+    //   .post<ItemPostResponse>(`${BASE_URL}/items`, {
+    //     headers: {
+    //       Accept: "application/json",
+    //     },
+    //     body: {
+    //       name: name,
+    //       price: price,
+    //     },
+    //   })
+    //   .then((response) => {
+    //     let newItems = items.filter(item => item.element.name!==name)
+    //     let newItem:EditableListElement = {editable:false, element:
+    //       {name: name,
+    //       price: price}
+    //     }
+    //     newItems.push(newItem)
+    //     setItems(newItems)
+    //   });
   }
 
   function deleteItem(name: string) {
@@ -75,21 +64,19 @@ export const IndexPage: React.FC = (props) => {
         },
       })
       .then((response) => {
-        let newItems = items.filter(item => item.element.name!==name)
-        setItems(newItems)
+        let newItems = items.filter((item) => item.name !== name);
+        setItems(newItems);
       });
   }
 
-  const [items, setItems] = React.useState<EditableListElement[]>([]);
-
   function updateItems(name: string, newPrice: number) {
-    postItem(name,newPrice)
+    postItem(name, newPrice);
 
     setItems(
       items.map((item) => {
-        if (item.element.name == name) {
+        if (item.name == name) {
           let newItem = item;
-          newItem.element.price = newPrice;
+          newItem.price = newPrice;
           return newItem;
         } else {
           return item;
@@ -101,9 +88,9 @@ export const IndexPage: React.FC = (props) => {
   function toggleItems(name: string) {
     setItems(
       items.map((item) => {
-        if (item.element.name == name) {
+        if (item.name == name) {
           let newItem = item;
-          newItem.editable = !item.editable;
+          // newItem.editable = !item.editable;
           return newItem;
         } else {
           return item;
@@ -112,11 +99,17 @@ export const IndexPage: React.FC = (props) => {
     );
   }
 
-  function createItem(name:string, price:number){
-    postItem(name,price)
-    // let newItem:EditableListElement = {editable:false, element: {name: name, price: price}}
-    // let newItems = [...items,newItem]
-    // setItems(newItems)
+  function createItem(name: string, price: number) {
+    postItem(name, price);
+  }
+  const [seletedForEdit, setSeletedForEdit] = React.useState<string>("");
+
+  function ed() {
+    if (seletedForEdit == "") {
+      setSeletedForEdit("alma");
+    } else {
+      setSeletedForEdit("");
+    }
   }
   return (
     <>
@@ -128,12 +121,14 @@ export const IndexPage: React.FC = (props) => {
       >
         <NewItem newItem={createItem}></NewItem>
         {items.map((item) => (
-          <Item
+          <ItemComponent
+            key={item.name}
             item={item}
             updateItems={updateItems}
             toggleItems={toggleItems}
             deleteItem={deleteItem}
-          ></Item>
+            editable={seletedForEdit == item.name}
+          ></ItemComponent>
         ))}
       </VStack>
     </>

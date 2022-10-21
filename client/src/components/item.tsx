@@ -6,32 +6,28 @@ import { Item } from "../intefaces/GetListData";
 export const ItemComponent: React.FC<{
   item: Item;
   editable: boolean;
-  updateItems: (name: string, newPrice: number) => void;
-  toggleItems: (name: string) => void;
+  updateItems: (item: Item) => void;
+  selectForEdit: (name: string) => void;
   deleteItem: (name: string) => void;
-}> = ({ item, editable, updateItems, toggleItems, deleteItem }) => {
+}> = ({ item, editable, updateItems, selectForEdit, deleteItem }) => {
   const [input, setInput] = useState("");
 
   function changeHandler(e: any) {
+    item.price = e.target.value
     setInput(e.target.value);
   }
 
   function save() {
-    updateItems(item.name, Number(input));
-    toggle();
+    updateItems(item);
+    selectForEdit('')
   }
 
-  function toggle() {
-    toggleItems(item.name);
-  }
-
-  function remove(){
-    deleteItem(item.name)
+  function remove() {
+    deleteItem(item.name);
   }
   return (
     <>
       <Flex justifyContent="space-between" alignItems="center">
-        {editable && (<>Editing</>)}
         <VStack flex={1} alignItems="start">
           {editable ? (
             <>
@@ -52,13 +48,13 @@ export const ItemComponent: React.FC<{
               Ment
             </Button>
           ) : (
-            <Button m={3} onClick={toggle}>
+            <Button m={3} onClick={() => selectForEdit(item.name)}>
               Szerkeszt
             </Button>
           )}
 
           {editable ? (
-            <Button onClick={toggle}>Mégsem</Button>
+            <Button onClick={() => selectForEdit('')}>Mégsem</Button>
           ) : (
             <Button onClick={remove}>Töröl</Button>
           )}

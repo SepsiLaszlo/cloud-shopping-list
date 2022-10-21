@@ -39,7 +39,7 @@ export const Item: React.FC<{
           ) : (
             <>
               <Text>{item.element.name}</Text>
-              <Text>{Number(item.element.price)}</Text>
+              <Text>{Number(item.element.price)} Ft</Text>
             </>
           )}
         </VStack>

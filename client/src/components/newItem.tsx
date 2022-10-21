@@ -33,7 +33,7 @@ export const NewItem: React.FC<{
     <Stack>
       <Text>Név</Text>
       <Input value={name} onChange={changeNameHandler}></Input>
-      <Text>Ár</Text>
+      <Text>Ár (Ft)</Text>
       <Input value={price} onChange={changePriceHandler}></Input>
       <Button mx={3} onClick={save}>
         Létrehoz

@@ -1,7 +1,7 @@
 import { Box, Button, Flex, Input, Text, VStack } from "@chakra-ui/react";
 import * as React from "react";
 import { useState } from "react";
-import { Item } from "../intefaces/GetListData";
+import { Item } from "../intefaces/interfaces";
 
 export const ItemComponent: React.FC<{
   item: Item;
@@ -13,17 +13,19 @@ export const ItemComponent: React.FC<{
   const [input, setInput] = useState("");
 
   function changeHandler(e: any) {
-    item.price = e.target.value
+    item.price = e.target.value;
     setInput(e.target.value);
   }
 
   function save() {
     updateItems(item);
-    selectForEdit('')
+    selectForEdit("");
   }
 
   function remove() {
-    deleteItem(item.name);
+    if (item.id) {
+      deleteItem(item.id);
+    }
   }
   return (
     <>
@@ -54,7 +56,7 @@ export const ItemComponent: React.FC<{
           )}
 
           {editable ? (
-            <Button onClick={() => selectForEdit('')}>Mégsem</Button>
+            <Button onClick={() => selectForEdit("")}>Mégsem</Button>
           ) : (
             <Button onClick={remove}>Töröl</Button>
           )}

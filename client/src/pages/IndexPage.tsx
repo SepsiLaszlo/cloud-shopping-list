@@ -12,10 +12,12 @@ import {
 import * as React from "react";
 import axios from "axios";
 import { useEffect } from "react";
-import { Item, ItemPostResponse } from "../intefaces/GetListData";
+import { Item, ItemPostResponse } from "../intefaces/interfaces";
 import { ItemComponent } from "../components/item";
 import { BASE_URL } from "../constants";
 import { NewItem } from "../components/newItem";
+import {v4 as uuidv4} from 'uuid';
+
 export const IndexPage: React.FC = (props) => {
   const [items, setItems] = React.useState<Item[]>([]);
   const [seletedForEdit, setSeletedForEdit] = React.useState<string>("");
@@ -32,35 +34,34 @@ export const IndexPage: React.FC = (props) => {
   function putItem(newItem: Item) {
     axios
       .post<ItemPostResponse>(`${BASE_URL}/items`, {
-        headers: {
-          Accept: "application/json",
-        },
         body: {
+          id: newItem.id ? newItem.id : uuidv4(),
           name: newItem.name,
           price: newItem.price,
         },
       })
       .then((response) => {
-        let newItems = items.filter((item) => item.name !== newItem.name);
-        newItems.push(newItem);
+        let newItems = [...items];
+        if (newItems.find((item) => item.id === newItem.id)) {
+          newItems = newItems.map((i) =>
+            i.id == newItem.id ? newItem : i
+          );
+        } else {
+          newItems.unshift(newItem);
+        }
         setItems(newItems);
       });
   }
 
-  function deleteItem(name: string) {
+  function deleteItem(id: string) {
     axios
-      .delete<ItemPostResponse>(`${BASE_URL}/items/${name}`, {
-        headers: {
-          Accept: "application/json",
-        },
-      })
+      .delete<ItemPostResponse>(`${BASE_URL}/items/${id}`)
       .then((response) => {
-        let newItems = items.filter((item) => item.name !== name);
+        let newItems = items.filter((item) => item.id !== id);
         setItems(newItems);
       });
   }
 
- 
   return (
     <>
       <VStack

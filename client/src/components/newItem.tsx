@@ -10,7 +10,7 @@ import {
 } from "@chakra-ui/react";
 import * as React from "react";
 import { useState } from "react";
-import { Item } from "../intefaces/GetListData";
+import { Item } from "../intefaces/interfaces";
 
 export const NewItem: React.FC<{
   newItem: (item: Item) => void;

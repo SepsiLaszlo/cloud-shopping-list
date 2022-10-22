@@ -30,7 +30,7 @@ item_resource = API_CLIENT.create_resource({
 item_id_resource = API_CLIENT.create_resource({
                                         rest_api_id: api.id,
                                          parent_id: item_resource.id,
-                                         path_part: "{:name}",
+                                         path_part: "{name}",
                                        })                                       
 
 

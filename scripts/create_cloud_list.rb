@@ -1,7 +1,7 @@
 require "./constants.rb"
 require "./put_lambda.rb"
 require './create_dynamodb.rb'
-require './put_api_method.rb'
+require './api_method.rb'
 require './put_deployment.rb'
 
 
@@ -37,21 +37,23 @@ item_id_resource = API_CLIENT.create_resource({
                                        })                                       
 
 
+MockApiMethod.call(http_method:'OPTIONS',
+ api: api, resource: item_resource)
+MockApiMethod.call(http_method:'OPTIONS',
+ api: api, resource: item_id_resource)
+
  items_scan_lambda =  put_lambda(name:'item_scan')
- 
- put_api_method(http_method:'GET',
+ LambdaApiMethod.call(http_method:'GET',
  api: api, resource: item_resource,
  function_arn: items_scan_lambda.function_arn)
  
  items_put_lambda =  put_lambda(name:'item_put')
- 
- put_api_method(http_method:'POST',
+ LambdaApiMethod.call(http_method:'POST',
  api: api, resource: item_resource,
  function_arn: items_put_lambda.function_arn)
  
  items_delete_lambda =  put_lambda(name:'item_delete')
- items_delete_lambda
- put_api_method(http_method:'DELETE',
+ LambdaApiMethod.call(http_method:'DELETE',
  api: api, resource: item_id_resource,
  function_arn: items_delete_lambda.function_arn)
  

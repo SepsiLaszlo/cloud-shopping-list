@@ -1,9 +1,12 @@
 require "./constants.rb"
 require "./put_lambda.rb"
-require "./put_api_method.rb"
+require './create_dynamodb.rb'
+require './put_api_method.rb'
+require './put_deployment.rb'
 
+
+put_table
 p 'API CREATION START'
-
 apis = API_CLIENT.get_rest_apis
 
 apis.items.find do |api|
@@ -52,6 +55,9 @@ item_id_resource = API_CLIENT.create_resource({
  api: api, resource: item_id_resource,
  function_arn: items_delete_lambda.function_arn)
  
-p "api #{api.id}"
-# p items_scan_lambda
+ 
+ put_deployment(api_id: api.id)
+ 
+ # p items_scan_lambda
 p 'API CREATION - DONE'
+p "INVOKE URL:  https://#{api.id}.execute-api.us-east-1.amazonaws.com/prod"

@@ -16,44 +16,38 @@ import { Item, ItemPostResponse } from "../intefaces/interfaces";
 import { ItemComponent } from "../components/item";
 import { BASE_URL } from "../constants";
 import { NewItem } from "../components/newItem";
-import {v4 as uuidv4} from 'uuid';
+import { v4 as uuidv4 } from "uuid";
+import { AppService } from "../services/app.service";
 
 export const ListPage: React.FC = (props) => {
   const [items, setItems] = React.useState<Item[]>([]);
   const [seletedForEdit, setSeletedForEdit] = React.useState<string>("");
+  const appService = new AppService();
 
   useEffect(() => {
     if (items.length != 0) {
       return;
     }
-    axios.get<Item[]>(`${BASE_URL}/items`,
-    { 
-      headers:{Authorization: localStorage.getItem('accessToken') || ''
-    }}).then((response) => {
+    appService.getItemList().then((response) => {
       setItems(response.data);
     });
   });
 
   function putItem(newItem: Item) {
-    if(!newItem.id)
-    {
-      newItem.id = uuidv4()
+    if (!newItem.id) {
+      newItem.id = uuidv4();
     }
 
-    axios
-      .post<ItemPostResponse>(`${BASE_URL}/items`, {
-        body: {
-          id: newItem.id,
-          name: newItem.name,
-          price: newItem.price,
-        },
+    appService
+      .postItem({
+        id: newItem.id,
+        name: newItem.name,
+        price: newItem.price,
       })
       .then((response) => {
         let newItems = [...items];
         if (newItems.find((item) => item.id === newItem.id)) {
-          newItems = newItems.map((i) =>
-            i.id == newItem.id ? newItem : i
-          );
+          newItems = newItems.map((i) => (i.id == newItem.id ? newItem : i));
         } else {
           newItems.unshift(newItem);
         }

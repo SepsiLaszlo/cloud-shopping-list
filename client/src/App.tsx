@@ -75,7 +75,7 @@ const theme = extendTheme({
 export const App = () => (
   <ChakraProvider theme={theme}>
     <Box maxWidth="1000px" mx="auto" padding={3}>
-      <UserContext.Provider value={new Subject<string>('a')}>
+      <UserContext.Provider value={new Subject<string>()}>
         <NavBar></NavBar>
         <RouterProvider router={router} />
       </UserContext.Provider>

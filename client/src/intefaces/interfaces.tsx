@@ -1,23 +1,36 @@
-export interface  Item {
-  id?:string;
+export interface Item {
+  id?: string;
   name: string;
   price: number;
 }
 
 export interface ItemPostResponse {
-    message:string
+  message: string;
 }
 
 export interface Response {
-  data:ResponseData
+  data: ResponseData;
 }
 export interface ResponseData {
-  statusCode:number
-  body: string
+  statusCode: number;
+  body: string;
 }
 
 export interface PutItemBody {
-  id:string
-  name: string
-  price: number
+  id: string;
+  name: string;
+  price: number;
+}
+export interface User {
+  at_hash: string;
+  sub: string;
+  email_verified: boolean;
+  iss: string;
+  "cognito:username": string;
+  aud: string;
+  auth_time: number;
+  exp: number;
+  iat: number;
+  jti: string;
+  email: string;
 }

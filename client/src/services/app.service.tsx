@@ -1,7 +1,7 @@
 import axios from "axios";
+import jwtDecode from "jwt-decode";
 import { BASE_URL } from "../constants";
-import { Item, ItemPostResponse, PutItemBody } from "../intefaces/interfaces";
-
+import { Item, ItemPostResponse, PutItemBody, User } from "../intefaces/interfaces";
 export class AppService {
   public async getItemList() {
     if (!this.getAccessToken()) {
@@ -23,6 +23,14 @@ export class AppService {
         headers: this.authorizationHeader(),
       }
     );
+  }
+
+  public getUser<User>() {
+    const token = localStorage.getItem("idToken");
+    if (token == null) {
+      return ;
+    }
+    return jwtDecode(token);
   }
 
   private authorizationHeader() {

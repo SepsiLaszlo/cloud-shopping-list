@@ -12,11 +12,21 @@ import { useEffect } from "react";
 import { useState } from "react";
 import { of } from "rxjs";
 import { UserContext } from "../contexts/user.context";
+import { AppService } from "../services/app.service";
 
 export const NavBar: React.FC = () => {
   const userSubject = React.useContext(UserContext);
   const [userName, setUserName] = useState<string>("");
   userSubject.subscribe((name) => setUserName(name));
+
+const appService = new AppService()
+  useEffect(() => {
+    if (userName) {
+      return;
+    }
+   
+    setUserName(appService.getUser()['cognito:username'])
+  });
 
   return (
     <Flex minWidth="max-content" alignItems="center" gap="2" mb={30}>

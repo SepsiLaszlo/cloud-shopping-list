@@ -32,10 +32,15 @@ export const IndexPage: React.FC = (props) => {
   });
 
   function putItem(newItem: Item) {
+    if(!newItem.id)
+    {
+      newItem.id = uuidv4()
+    }
+
     axios
       .post<ItemPostResponse>(`${BASE_URL}/items`, {
         body: {
-          id: newItem.id ? newItem.id : uuidv4(),
+          id: newItem.id,
           name: newItem.name,
           price: newItem.price,
         },

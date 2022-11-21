@@ -2,12 +2,12 @@ require 'aws-sdk-dynamodb'
 require 'json'
 
 def lambda_handler(event:, context:)
-  name = event['params']['path']['name']
+  id = event['params']['path']['id']
   dynamodb_client = Aws::DynamoDB::Client.new
 
 resp = dynamodb_client.delete_item({
   key: {
-    "name" => name, 
+    "id" => id, 
   }, 
   table_name: "cloud-shopping-list", 
 })

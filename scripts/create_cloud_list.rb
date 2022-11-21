@@ -1,9 +1,12 @@
 require "./constants.rb"
 require "./put_lambda.rb"
-require "./put_api_method.rb"
+require './create_dynamodb.rb'
+require './api_method.rb'
+require './put_deployment.rb'
 
+
+put_table
 p 'API CREATION START'
-
 apis = API_CLIENT.get_rest_apis
 
 apis.items.find do |api|
@@ -30,28 +33,33 @@ item_resource = API_CLIENT.create_resource({
 item_id_resource = API_CLIENT.create_resource({
                                         rest_api_id: api.id,
                                          parent_id: item_resource.id,
-                                         path_part: "{name}",
+                                         path_part: "{id}",
                                        })                                       
 
 
+MockApiMethod.call(http_method:'OPTIONS',
+ api: api, resource: item_resource)
+MockApiMethod.call(http_method:'OPTIONS',
+ api: api, resource: item_id_resource)
+
  items_scan_lambda =  put_lambda(name:'item_scan')
- 
- put_api_method(http_method:'GET',
+ LambdaApiMethod.call(http_method:'GET',
  api: api, resource: item_resource,
  function_arn: items_scan_lambda.function_arn)
  
  items_put_lambda =  put_lambda(name:'item_put')
- 
- put_api_method(http_method:'POST',
+ LambdaApiMethod.call(http_method:'POST',
  api: api, resource: item_resource,
  function_arn: items_put_lambda.function_arn)
  
  items_delete_lambda =  put_lambda(name:'item_delete')
- items_delete_lambda
- put_api_method(http_method:'DELETE',
+ LambdaApiMethod.call(http_method:'DELETE',
  api: api, resource: item_id_resource,
  function_arn: items_delete_lambda.function_arn)
  
-p "api #{api.id}"
-# p items_scan_lambda
+ 
+ put_deployment(api_id: api.id)
+ 
+ # p items_scan_lambda
 p 'API CREATION - DONE'
+p "INVOKE URL:  https://#{api.id}.execute-api.us-east-1.amazonaws.com/prod"

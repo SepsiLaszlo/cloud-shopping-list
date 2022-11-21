@@ -1,6 +1,3 @@
-
-
-
 def upload_zip(name:)
     p "S3 UPLOAD START - #{name}"
     src_path = "~/environment/cloud-shopping-list/lambdas/#{name}"

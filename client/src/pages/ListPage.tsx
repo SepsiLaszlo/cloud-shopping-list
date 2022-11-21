@@ -18,7 +18,7 @@ import { BASE_URL } from "../constants";
 import { NewItem } from "../components/newItem";
 import {v4 as uuidv4} from 'uuid';
 
-export const IndexPage: React.FC = (props) => {
+export const ListPage: React.FC = (props) => {
   const [items, setItems] = React.useState<Item[]>([]);
   const [seletedForEdit, setSeletedForEdit] = React.useState<string>("");
 
@@ -26,7 +26,10 @@ export const IndexPage: React.FC = (props) => {
     if (items.length != 0) {
       return;
     }
-    axios.get<Item[]>(`${BASE_URL}/items`).then((response) => {
+    axios.get<Item[]>(`${BASE_URL}/items`,
+    { 
+      headers:{Authorization: localStorage.getItem('accessToken') || ''
+    }}).then((response) => {
       setItems(response.data);
     });
   });

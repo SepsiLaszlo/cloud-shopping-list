@@ -14,21 +14,27 @@ import {
 } from "@chakra-ui/react";
 import { ColorModeSwitcher } from "./ColorModeSwitcher";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import { IndexPage } from "./pages/IndexPage";
+import { ListPage } from "./pages/ListPage";
 import { Helmet } from "react-helmet";
 
 import { extendTheme } from "@chakra-ui/react";
 import { mode } from "@chakra-ui/theme-tools";
 import type { StyleFunctionProps } from "@chakra-ui/styled-system";
+import { HomePage } from "./pages/HomePage";
+import { CallbackPage } from "./pages/CallbackPage";
 
 const router = createBrowserRouter([
   {
-    path: "/",
-    element: <IndexPage></IndexPage>,
+    path: "/list",
+    element: <ListPage></ListPage>,
   },
   {
-    path: "/x",
-    element: <div>Hello x world!</div>,
+    path: "/",
+    element: <HomePage></HomePage>,
+  },
+  {
+    path: "/callback",
+    element: <CallbackPage></CallbackPage>,
   },
 ]);
 

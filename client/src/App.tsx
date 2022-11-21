@@ -11,6 +11,10 @@ import {
   Flex,
   Square,
   background,
+  Button,
+  ButtonGroup,
+  Heading,
+  Spacer,
 } from "@chakra-ui/react";
 import { ColorModeSwitcher } from "./ColorModeSwitcher";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
@@ -22,6 +26,9 @@ import { mode } from "@chakra-ui/theme-tools";
 import type { StyleFunctionProps } from "@chakra-ui/styled-system";
 import { HomePage } from "./pages/HomePage";
 import { CallbackPage } from "./pages/CallbackPage";
+import { NavBar } from "./components/navbar";
+import { UserContext } from "./contexts/user.context";
+import { Subject } from "rxjs";
 
 const router = createBrowserRouter([
   {
@@ -59,7 +66,7 @@ const theme = extendTheme({
         // },
       },
       div: {
-        color: "teal.500"
+        color: "teal.500",
       },
     },
   },
@@ -68,10 +75,10 @@ const theme = extendTheme({
 export const App = () => (
   <ChakraProvider theme={theme}>
     <Box maxWidth="1000px" mx="auto" padding={3}>
-      <Text textAlign="center" fontSize="4xl" mb={5}>
-        Cloud Shopping List
-      </Text>
-      <RouterProvider router={router} />
+      <UserContext.Provider value={new Subject<string>('a')}>
+        <NavBar></NavBar>
+        <RouterProvider router={router} />
+      </UserContext.Provider>
     </Box>
   </ChakraProvider>
 );

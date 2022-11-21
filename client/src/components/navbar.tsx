@@ -12,6 +12,7 @@ import { useEffect } from "react";
 import { useState } from "react";
 import { of } from "rxjs";
 import { UserContext } from "../contexts/user.context";
+import { User } from "../intefaces/interfaces";
 import { AppService } from "../services/app.service";
 
 export const NavBar: React.FC = () => {
@@ -24,8 +25,9 @@ const appService = new AppService()
     if (userName) {
       return;
     }
-   
-    setUserName(appService.getUser()['cognito:username'])
+    const savedUser = appService.getUser()
+    if(!savedUser){return}
+    setUserName(savedUser["cognito:username"])
   });
 
   return (

@@ -25,10 +25,10 @@ export class AppService {
     );
   }
 
-  public getUser<User>() {
+  public getUser(): User | null {
     const token = localStorage.getItem("idToken");
     if (token == null) {
-      return ;
+      return null;
     }
     return jwtDecode(token);
   }

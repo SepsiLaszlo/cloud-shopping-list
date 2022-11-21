@@ -14,21 +14,35 @@ import { of } from "rxjs";
 import { UserContext } from "../contexts/user.context";
 import { User } from "../intefaces/interfaces";
 import { AppService } from "../services/app.service";
+import {
+  Navigate,
+  useNavigate,
+  useParams,
+  useSearchParams,
+} from "react-router-dom";
 
 export const NavBar: React.FC = () => {
   const userSubject = React.useContext(UserContext);
   const [userName, setUserName] = useState<string>("");
   userSubject.subscribe((name) => setUserName(name));
 
-const appService = new AppService()
+  const appService = new AppService();
   useEffect(() => {
     if (userName) {
       return;
     }
-    const savedUser = appService.getUser()
-    if(!savedUser){return}
-    setUserName(savedUser["cognito:username"])
+    const savedUser = appService.getUser();
+    if (!savedUser) {
+      return;
+    }
+    setUserName(savedUser["cognito:username"]);
   });
+
+  function logout() {
+    localStorage.removeItem("idToken");
+    localStorage.removeItem("accessToken");
+    window.location.href = "/";
+  }
 
   return (
     <Flex minWidth="max-content" alignItems="center" gap="2" mb={30}>
@@ -37,8 +51,13 @@ const appService = new AppService()
       </Box>
       <Spacer />
       <ButtonGroup gap="2">
-        <Button>{userName}</Button>
-        <Button>Kilépés</Button>
+        {userName && (
+          <>
+            <Button>{userName}</Button>
+
+            <Button onClick={logout}>Kilépés</Button>
+          </>
+        )}
       </ButtonGroup>
     </Flex>
   );

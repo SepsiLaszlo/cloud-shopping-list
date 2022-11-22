@@ -6,6 +6,8 @@ import {
   Button,
   Box,
   useControllableState,
+  Text,
+  Link,
 } from "@chakra-ui/react";
 import * as React from "react";
 import { useEffect } from "react";
@@ -23,19 +25,19 @@ import {
 
 export const NavBar: React.FC = () => {
   const userSubject = React.useContext(UserContext);
-  const [userName, setUserName] = useState<string>("");
-  userSubject.subscribe((name) => setUserName(name));
+  const [user, setUser] = useState<User>();
+  userSubject.subscribe((user) => setUser(user));
 
   const appService = new AppService();
   useEffect(() => {
-    if (userName) {
+    if (user) {
       return;
     }
     const savedUser = appService.getUser();
     if (!savedUser) {
       return;
     }
-    setUserName(savedUser["cognito:username"]);
+    setUser(savedUser);
   });
 
   function logout() {
@@ -47,13 +49,24 @@ export const NavBar: React.FC = () => {
   return (
     <Flex minWidth="max-content" alignItems="center" gap="2" mb={30}>
       <Box p="2">
-        <Heading size="md">Cloud Shopping List</Heading>
+        <Link href="/">
+          <Heading size="md">Cloud Shopping List</Heading>
+        </Link>
       </Box>
       <Spacer />
       <ButtonGroup gap="2">
-        {userName && (
+        {user && (
           <>
-            <Button>{userName}</Button>
+            <Link
+              href="/user"
+              bgColor="gray.100"
+              py={2}
+              px={4}
+              borderRadius={5}
+              fontWeight="bold"
+            >
+              {user["cognito:username"]}
+            </Link>
 
             <Button onClick={logout}>Kilépés</Button>
           </>

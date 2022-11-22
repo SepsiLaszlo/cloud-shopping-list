@@ -29,6 +29,8 @@ import { CallbackPage } from "./pages/CallbackPage";
 import { NavBar } from "./components/navbar";
 import { UserContext } from "./contexts/user.context";
 import { Subject } from "rxjs";
+import { User } from "./intefaces/interfaces";
+import { UserPage } from "./pages/UserPage";
 
 const router = createBrowserRouter([
   {
@@ -42,6 +44,10 @@ const router = createBrowserRouter([
   {
     path: "/callback",
     element: <CallbackPage></CallbackPage>,
+  },
+  {
+    path: "/user",
+    element: <UserPage></UserPage>,
   },
 ]);
 
@@ -75,7 +81,7 @@ const theme = extendTheme({
 export const App = () => (
   <ChakraProvider theme={theme}>
     <Box maxWidth="1000px" mx="auto" padding={3}>
-      <UserContext.Provider value={new Subject<string>()}>
+      <UserContext.Provider value={new Subject<User>()}>
         <NavBar></NavBar>
         <RouterProvider router={router} />
       </UserContext.Provider>

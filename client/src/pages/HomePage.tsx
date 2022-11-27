@@ -10,16 +10,29 @@ export const HomePage: React.FC = (props) => {
   return (
     <VStack mt={100}>
       {user && (
-        <Link
-          href="/list"
-          bgColor="gray.100"
-          py={2}
-          px={4}
-          borderRadius={5}
-          fontWeight="bold"
-        >
-          Aktív lista
-        </Link>
+        <>
+          {" "}
+          <Link
+            href="/active"
+            bgColor="gray.100"
+            py={2}
+            px={4}
+            borderRadius={5}
+            fontWeight="bold"
+          >
+            Aktív lista
+          </Link>
+          <Link
+            href="/lists"
+            bgColor="gray.100"
+            py={2}
+            px={4}
+            borderRadius={5}
+            fontWeight="bold"
+          >
+            Összes lista
+          </Link>
+        </>
       )}
 
       {!user && (

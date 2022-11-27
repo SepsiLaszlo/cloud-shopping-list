@@ -31,11 +31,16 @@ import { UserContext } from "./contexts/user.context";
 import { Subject } from "rxjs";
 import { User } from "./intefaces/interfaces";
 import { UserPage } from "./pages/UserPage";
+import { ActiveListPage } from "./pages/ActiveListPage";
 
 const router = createBrowserRouter([
   {
     path: "/list",
     element: <ListPage></ListPage>,
+  },
+  {
+    path: "/active",
+    element: <ActiveListPage></ActiveListPage>,
   },
   {
     path: "/",

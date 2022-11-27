@@ -15,17 +15,17 @@ import { Item } from "../intefaces/interfaces";
 export const NewItem: React.FC<{
   newItem: (item: Item) => void;
 }> = ({ newItem }) => {
-  const [item, setItem] = useState<Item>({ name: "", price: 0 });
+  const [item, setItem] = useState<Item>({ name: "", price: 0, bought: false });
 
   function save() {
     newItem(item);
-    setItem({ name: "", price: 0 })
+    setItem({ name: "", price: 0,  bought: false })
   }
   function changeNameHandler(e: any) {
-    setItem({ name: e.target.value, price: item.price });
+    setItem({ name: e.target.value, price: item.price, bought: item.bought });
   }
   function changePriceHandler(e: any) {
-    setItem({ name: item.name, price: e.target.value });
+    setItem({ name: item.name, price: e.target.value,  bought: item.bought });
   }
   return (
     <Stack>

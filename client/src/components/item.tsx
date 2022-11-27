@@ -1,4 +1,4 @@
-import { Box, Button, Flex, Input, Text, VStack } from "@chakra-ui/react";
+import { Box, Button, Flex, grid, Input, Text, VStack } from "@chakra-ui/react";
 import * as React from "react";
 import { useState } from "react";
 import { Item } from "../intefaces/interfaces";
@@ -23,9 +23,19 @@ export const ItemComponent: React.FC<{
   }
 
   function remove() {
-    if (item.id) {
-      deleteItem(item.id);
+    if (item.name) {
+      deleteItem(item.name);
     }
+  }
+
+  function buyItem() {
+    item.bought = true;
+    updateItems(item);
+  }
+
+  function unBuyItem() {
+    item.bought = false;
+    updateItems(item);
   }
   return (
     <>
@@ -33,18 +43,40 @@ export const ItemComponent: React.FC<{
         <VStack flex={1} alignItems="start">
           {editable ? (
             <>
-              <Text>{item.name}</Text>
+              <Text>{item.name}</Text> 
               <Input onChange={changeHandler}></Input>
             </>
           ) : (
             <>
               <Text>{item.name}</Text>
+              { item.bought && <Text color="green.400">Megvéve</Text> }
               <Text>{Number(item.price)} Ft</Text>
             </>
           )}
         </VStack>
+        
 
         <Box minW={200}>
+          {!item.bought ? (
+            <Button
+              mx={3}
+              onClick={buyItem}
+              bgColor="green.400"
+              textColor="white"
+            >
+              Megvettem
+            </Button>
+          ) : (
+            <Button
+              bgColor="orange.400"
+              textColor="white"
+              m={3}
+              onClick={unBuyItem}
+            >
+              Vissza a listára
+            </Button>
+          )}
+
           {editable ? (
             <Button mx={3} onClick={save}>
               Ment
@@ -58,7 +90,9 @@ export const ItemComponent: React.FC<{
           {editable ? (
             <Button onClick={() => selectForEdit("")}>Mégsem</Button>
           ) : (
-            <Button onClick={remove}>Töröl</Button>
+            <Button onClick={remove} bgColor="red.400" textColor="white">
+              Töröl
+            </Button>
           )}
         </Box>
       </Flex>

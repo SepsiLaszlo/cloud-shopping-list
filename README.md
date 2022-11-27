@@ -1,5 +1,11 @@
 # cloud-shopping-list-stack
 
+
+# TODOS
+- User shopping list mgmt, users can archive and check prevoius lists
+- Add higlights to search
+- Make list sharable to other users or groups.
+
 This project contains source code and supporting files for a serverless application that you can deploy with the SAM CLI. It includes the following files and folders.
 
 - hello_world - Code for the application's Lambda function.

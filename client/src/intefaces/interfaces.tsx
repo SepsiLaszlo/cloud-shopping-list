@@ -2,6 +2,14 @@ export interface Item {
   id?: string;
   name: string;
   price: number;
+  bought: boolean;
+}
+
+export interface List {
+  id: string;
+  user_id: string;
+  active: boolean;
+  items: Item[];
 }
 
 export interface ItemPostResponse {

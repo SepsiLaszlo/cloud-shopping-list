@@ -37,34 +37,39 @@ end
 
 def seed_data
   
- seeds = [
-  {
-     "id" => SecureRandom.uuid, 
-     "name" => "alma", 
-     "price" => 250, 
-   },
-    {
-     "id" => SecureRandom.uuid, 
-     "name" => "banán", 
-     "price" => 350, 
-   },
-    {
-     "id" => SecureRandom.uuid, 
-     "name" => "körte", 
-     "price" => 400, 
-   }
- ]
+ seed ={
+  "id": SecureRandom.uuid,
+  "user_id": SecureRandom.uuid,
+  "active": true,
+  "items": [
+   {
+      "id" => SecureRandom.uuid, 
+      "name" => "alma", 
+      "price" => 250, 
+      "bought": true
+    },
+     {
+      "id" => SecureRandom.uuid, 
+      "name" => "banán", 
+      "price" => 350, 
+      "bought": false
+
+    },
+     {
+      "id" => SecureRandom.uuid, 
+      "name" => "körte", 
+      "price" => 400, 
+      "bought": false
+
+    }
+  ]
+ }
  
- seeds.each do |seed|
+ 
   DYNAMODB_CLIENT.put_item({
-   item: {
-     "id" => seed['id'] , 
-     "name" => seed['name'], 
-     "price" => seed['price'], 
-   }, 
+   item: seed, 
    table_name: DYNAMODB_TABLE, 
  })
- end
 end 
 
 

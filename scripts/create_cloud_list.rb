@@ -57,6 +57,47 @@ MockApiMethod.call(http_method:'OPTIONS',
  api: api, resource: item_id_resource,
  function_arn: items_delete_lambda.function_arn)
  
+ # List endpoints
+ 
+ list_resource = API_CLIENT.create_resource({
+                                         rest_api_id: api.id,
+                                         parent_id: root_id,
+                                         path_part: "lists",
+                                       })
+
+list_id_resource = API_CLIENT.create_resource({
+                                        rest_api_id: api.id,
+                                         parent_id: list_resource.id,
+                                         path_part: "{id}",
+                                       })                
+ 
+ list_active_resource = API_CLIENT.create_resource({
+                                         rest_api_id: api.id,
+                                         parent_id: list_id_resource.id,
+                                         path_part: "active",
+                                       })
+                                       
+ MockApiMethod.call(http_method:'OPTIONS',
+ api: api, resource: list_resource)
+MockApiMethod.call(http_method:'OPTIONS',
+ api: api, resource: list_id_resource)
+ MockApiMethod.call(http_method:'OPTIONS',
+ api: api, resource: list_active_resource)
+ 
+ list_all_lambda =  put_lambda(name:'list_all')
+ LambdaApiMethod.call(http_method:'GET',
+ api: api, resource: list_id_resource,
+ function_arn: list_all_lambda.function_arn)
+ 
+ list_active_lambda =  put_lambda(name:'list_active')
+ LambdaApiMethod.call(http_method:'GET',
+ api: api, resource: list_active_resource,
+ function_arn: list_active_lambda.function_arn)
+ 
+ list_put_lambda =  put_lambda(name:'list_put')
+ LambdaApiMethod.call(http_method:'POST',
+ api: api, resource: list_resource,
+ function_arn: list_put_lambda.function_arn)
  
  put_deployment(api_id: api.id)
  

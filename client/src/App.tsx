@@ -32,6 +32,7 @@ import { Subject } from "rxjs";
 import { User } from "./intefaces/interfaces";
 import { UserPage } from "./pages/UserPage";
 import { ActiveListPage } from "./pages/ActiveListPage";
+import { AllListsPage } from "./pages/AllListPage";
 
 const router = createBrowserRouter([
   {
@@ -53,6 +54,10 @@ const router = createBrowserRouter([
   {
     path: "/user",
     element: <UserPage></UserPage>,
+  },
+  {
+    path: '/lists',
+    element: <AllListsPage></AllListsPage>
   },
 ]);
 

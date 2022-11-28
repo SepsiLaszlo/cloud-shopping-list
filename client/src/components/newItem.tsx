@@ -28,8 +28,9 @@ export const NewItem: React.FC<{
     setItem({ name: item.name, price: e.target.value,  bought: item.bought });
   }
   return (
-    <Stack>
-      <Text>Név</Text>
+    <Stack borderColor='primary' borderWidth={4} padding={2} borderRadius={10}>
+      <Text fontSize='xl'>Termék felvétele</Text>
+      <Text>Termék neve</Text>
       <Input value={item.name} onChange={changeNameHandler}></Input>
       <Text>Ár (Ft)</Text>
       <Input value={item.price} onChange={changePriceHandler}></Input>

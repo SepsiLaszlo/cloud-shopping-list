@@ -7,6 +7,7 @@ export interface Item {
 
 export interface List {
   id: string;
+  name: string;
   user_id: string;
   active: boolean;
   items: Item[];

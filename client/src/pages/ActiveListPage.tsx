@@ -32,7 +32,7 @@ export const ActiveListPage: React.FC = (props) => {
   });
 
   function loadActiveList() {
-    appService.getActiveList().then((response) => {
+    appService.getActiveList()?.then((response) => {
       if (!response) {
         return;
       }
@@ -69,6 +69,7 @@ export const ActiveListPage: React.FC = (props) => {
       return;
     }
     const list: List = {
+      name: "--Adj meg egy lista nevet --",
       id: uuidv4(),
       user_id: user_id,
       active: true,
@@ -77,7 +78,10 @@ export const ActiveListPage: React.FC = (props) => {
     appService.postList(list).then();
   }
   function finishList() {
-    if (!list) return;
+    if (!list) {
+      createNewList();
+      return;
+    }
     list.active = false;
     appService
       .postList(list)
@@ -85,6 +89,18 @@ export const ActiveListPage: React.FC = (props) => {
         createNewList();
       })
       .then(() => loadActiveList());
+  }
+
+  function nameChangeHandler(e: any) {
+    if (!list) return;
+    list.name = e.target.value;
+    setListValue({ ...list });
+    putList()
+  }
+
+  function putList() {
+    if (!list) return;
+    appService.postList(list).then();
   }
 
   return (
@@ -95,6 +111,7 @@ export const ActiveListPage: React.FC = (props) => {
         align="stretch"
         px={5}
       >
+        <Input value={list?.name || ""} onChange={nameChangeHandler} />
         <NewItem newItem={putItem}></NewItem>
         <Button onClick={finishList} bgColor="green.400" textColor="white">
           Végeztem a vásárlással

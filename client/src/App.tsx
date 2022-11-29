@@ -44,6 +44,10 @@ const router = createBrowserRouter([
     element: <ActiveListPage></ActiveListPage>,
   },
   {
+    path: "/lists/:id",
+    element: <ActiveListPage></ActiveListPage>,
+  },
+  {
     path: "/",
     element: <HomePage></HomePage>,
   },
@@ -59,6 +63,7 @@ const router = createBrowserRouter([
     path: '/lists',
     element: <AllListsPage></AllListsPage>
   },
+  
 ]);
 
 const theme = extendTheme({

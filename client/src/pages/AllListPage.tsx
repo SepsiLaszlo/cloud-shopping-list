@@ -18,7 +18,7 @@ export const AllListsPage: React.FC = (props) => {
   return (
     <VStack>
       {lists?.map((list) => (
-        <Button>{list.name}</Button>
+        <Link href={"/lists/"+ list.id}>{list.name}</Link>
       ))}
     </VStack>
   );

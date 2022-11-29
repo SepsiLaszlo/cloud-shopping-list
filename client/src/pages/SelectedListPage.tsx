@@ -18,32 +18,18 @@ import { BASE_URL } from "../constants";
 import { NewItem } from "../components/newItem";
 import { v4 as uuidv4 } from "uuid";
 import { AppService } from "../services/app.service";
-import { useParams } from "react-router-dom";
 
 export const ActiveListPage: React.FC = (props) => {
   const [list, setListValue] = React.useState<List>();
   const [seletedForEdit, setSeletedForEdit] = React.useState<string>("");
   const appService = new AppService();
-  let { id } = useParams();
+
   useEffect(() => {
     if (list) {
       return;
     }
-    if (id) {
-      loadSelectedList();
-    } else {
-      loadActiveList();
-    }
+    loadActiveList();
   });
-
-  function loadSelectedList() {
-    appService.getAllList()?.then((response) => {
-      if (!response) {
-        return;
-      }
-      setList(response.data.filter(list => list.id == id)[0]);
-    });
-  }
 
   function loadActiveList() {
     appService.getActiveList()?.then((response) => {
@@ -109,7 +95,7 @@ export const ActiveListPage: React.FC = (props) => {
     if (!list) return;
     list.name = e.target.value;
     setListValue({ ...list });
-    putList();
+    putList()
   }
 
   function putList() {

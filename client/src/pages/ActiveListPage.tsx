@@ -32,7 +32,11 @@ export const ActiveListPage: React.FC = (props) => {
     if (id) {
       loadSelectedList();
     } else {
-      loadActiveList();
+      loadActiveList()?.then((response) => {
+        if (response === null) {
+          // createNewList();
+        }
+      });
     }
   });
 
@@ -41,16 +45,17 @@ export const ActiveListPage: React.FC = (props) => {
       if (!response) {
         return;
       }
-      setList(response.data.filter(list => list.id == id)[0]);
+      setList(response.data.filter((list) => list.id == id)[0]);
     });
   }
 
   function loadActiveList() {
-    appService.getActiveList()?.then((response) => {
-      if (!response) {
-        return;
+    return appService.getActiveList()?.then((response) => {
+      if (!response || response.data == null) {
+        return null;
+      } else {
+        setList(response.data);
       }
-      setList(response.data);
     });
   }
 
@@ -90,6 +95,7 @@ export const ActiveListPage: React.FC = (props) => {
       items: [],
     };
     appService.postList(list).then();
+    setListValue({ ...list });
   }
   function finishList() {
     if (!list) {

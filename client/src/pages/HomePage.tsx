@@ -8,10 +8,9 @@ export const HomePage: React.FC = (props) => {
   const appService = new AppService();
   const user = appService.getUser();
   return (
-    <VStack mt={100}>
+    <VStack mt={100} width="50%" mx="auto">
       {user && (
         <>
-          {" "}
           <Link
             href="/active"
             bgColor="gray.100"
@@ -19,6 +18,8 @@ export const HomePage: React.FC = (props) => {
             px={4}
             borderRadius={5}
             fontWeight="bold"
+            width="100%"
+            textAlign='center'
           >
             Aktív lista
           </Link>
@@ -29,6 +30,8 @@ export const HomePage: React.FC = (props) => {
             px={4}
             borderRadius={5}
             fontWeight="bold"
+            width="100%"
+            textAlign='center'
           >
             Összes lista
           </Link>

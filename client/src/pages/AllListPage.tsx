@@ -16,9 +16,20 @@ export const AllListsPage: React.FC = (props) => {
     });
   });
   return (
-    <VStack>
+    <VStack width='50%' mx='auto'>
       {lists?.map((list) => (
-        <Link href={"/lists/"+ list.id}>{list.name}</Link>
+        <Link
+        href={"/lists/"+ list.id}
+        bgColor="gray.100"
+        py={2}
+        px={4}
+        borderRadius={5}
+        fontWeight="bold"
+        width="100%"
+        textAlign='center'
+      >
+        {list.name}
+      </Link>
       ))}
     </VStack>
   );

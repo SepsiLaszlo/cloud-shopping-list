@@ -1,12 +1,13 @@
 require './service.rb'
 
 class ApiMethod < Service
-    attr_reader :http_method, :api, :resource
+    attr_reader :http_method, :api, :resource, :authorizer_id
     
-    def initialize(http_method:,api:, resource:)
+    def initialize(http_method:,api:, resource:,  authorizer_id: nil)
         @http_method = http_method
         @api = api
         @resource = resource
+        @authorizer_id = authorizer_id
     end
     
     def call
@@ -19,12 +20,27 @@ class ApiMethod < Service
     private
     
     def put_method
-        API_CLIENT.put_method(
-          rest_api_id: api.id,
-          resource_id: resource.id,
-          http_method: http_method,
-          authorization_type: 'NONE'
-        )
+        params = {}
+        if authorizer_id
+          params =  {
+            rest_api_id: api.id,
+            resource_id: resource.id,
+            http_method: http_method,
+            authorization_type: 'COGNITO_USER_POOLS',
+            authorizer_id: authorizer_id
+           } 
+            
+        else
+          params =  {
+            rest_api_id: api.id,
+            resource_id: resource.id,
+            http_method: http_method,
+            authorization_type: 'NONE'
+           } 
+        end
+            
+        
+        API_CLIENT.put_method(params)
     end
 
     def put_method_response

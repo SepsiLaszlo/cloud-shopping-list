@@ -3,7 +3,7 @@ require "./put_lambda.rb"
 require './create_dynamodb.rb'
 require './api_method.rb'
 require './put_deployment.rb'
-
+require './create_authorizer.rb'
 
 put_table
 p 'API CREATION START'
@@ -76,7 +76,8 @@ list_id_resource = API_CLIENT.create_resource({
                                          parent_id: list_id_resource.id,
                                          path_part: "active",
                                        })
-                                       
+
+authorizer = create_authorizer(rest_api_id: api.id)
  MockApiMethod.call(http_method:'OPTIONS',
  api: api, resource: list_resource)
 MockApiMethod.call(http_method:'OPTIONS',
@@ -87,17 +88,20 @@ MockApiMethod.call(http_method:'OPTIONS',
  list_all_lambda =  put_lambda(name:'list_all')
  LambdaApiMethod.call(http_method:'GET',
  api: api, resource: list_id_resource,
- function_arn: list_all_lambda.function_arn)
+ function_arn: list_all_lambda.function_arn,
+ authorizer_id: authorizer.id)
  
  list_active_lambda =  put_lambda(name:'list_active')
  LambdaApiMethod.call(http_method:'GET',
  api: api, resource: list_active_resource,
- function_arn: list_active_lambda.function_arn)
+ function_arn: list_active_lambda.function_arn,
+ authorizer_id: authorizer.id)
  
  list_put_lambda =  put_lambda(name:'list_put')
  LambdaApiMethod.call(http_method:'POST',
  api: api, resource: list_resource,
- function_arn: list_put_lambda.function_arn)
+ function_arn: list_put_lambda.function_arn,
+ authorizer_id: authorizer.id)
  
  put_deployment(api_id: api.id)
  

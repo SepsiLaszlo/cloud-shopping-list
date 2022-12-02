@@ -25,7 +25,7 @@ export const CallbackPage: React.FC = (props) => {
       userSubject.next(user);
     }
 
-    navigate("/list");
+    navigate("/");
   });
 
   return (

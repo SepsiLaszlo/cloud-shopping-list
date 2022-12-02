@@ -73,7 +73,7 @@ export class AppService {
   }
 
   private authorizationHeader() {
-    return { Authorization: this.getAccessToken() || "" };
+    return { Authorization: this.getIdToken() || "" };
   }
   private getAccessToken() {
     return localStorage.getItem("accessToken");

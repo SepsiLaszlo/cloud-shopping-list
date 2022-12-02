@@ -34,7 +34,7 @@ export const ActiveListPage: React.FC = (props) => {
     } else {
       loadActiveList()?.then((response) => {
         if (response === null) {
-          // createNewList();
+          createNewList();
         }
       });
     }

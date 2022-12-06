@@ -133,9 +133,12 @@ export const ActiveListPage: React.FC = (props) => {
       >
         <Input value={list?.name || ""} onChange={nameChangeHandler} />
         <NewItem newItem={putItem}></NewItem>
-        <Button onClick={finishList} bgColor="green.400" textColor="white">
-          Végeztem a vásárlással
-        </Button>
+
+        {list?.active && (
+          <Button onClick={finishList} bgColor="green.400" textColor="white">
+            Végeztem a vásárlással
+          </Button>
+        )}
         {list?.items.map((item) => (
           <ItemComponent
             key={item.name}
